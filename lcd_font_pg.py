@@ -1,36 +1,16 @@
-# handmade LCD font for pygame
-# 5x7ドットマトリクス
+"""
+handmade LCD font for pygame
+5x7ドットマトリクス
+"""
 
-# from math import log
 import pygame
 from pygame.locals import Rect
 
 
-LCD_0 = (0, 1, 1, 1, 0,
-         1, 0, 0, 0, 1,
-         1, 0, 0, 1, 1,
-         1, 0, 1, 0, 1,
-         1, 1, 0, 0, 1,
-         1, 0, 0, 0, 1,
-         0, 1, 1, 1, 0)
+with open("fonts/LCDfont_5x7.txt", encoding="utf-8") as f:
+    LCD_font_styles = f.read().split('\n')
+    # print(LCD_font_styles)
 
-LCD_1 = (0, 0, 1, 0, 0,
-         0, 1, 1, 0, 0,
-         0, 0, 1, 0, 0,
-         0, 0, 1, 0, 0,
-         0, 0, 1, 0, 0,
-         0, 0, 1, 0, 0,
-         0, 1, 1, 1, 0)
-
-LCD_2 = (0, 1, 1, 1, 0,
-         1, 0, 0, 0, 1,
-         0, 0, 0, 0, 1,
-         0, 0, 0, 1, 0,
-         0, 0, 1, 0, 0,
-         0, 1, 0, 0, 0,
-         1, 1, 1, 1, 1)
-
-LCD_font_styles = (LCD_0, LCD_1, LCD_2)
 
 DARK_GRAY = (40, 40, 40)
 GRAY = (80, 80, 80)
@@ -41,8 +21,13 @@ WHITE = (250, 250, 250)
 
 
 class LCD_font():
+    """test
+    test2
+    """
     def __init__(self, screen):
         self.screen = screen
+        self.init_col()
+        self.init_row()
 
     def init_col(self, BLOCK_SIZE=4, BLOCK_INTV=4, COLOR_ON=WHITE, COLOR_OFF=GRAY):
         # ひと桁、コラムの設定
@@ -63,18 +48,39 @@ class LCD_font():
     def update_col(self, col=0, code=2):  # ある桁にある文字を表示する関数
         # codeの文字をcol桁目に表示、桁は最上位桁の左から右へ進む。
         block_size = self.BLOCK_SIZE
-        i = 0
+        # 桁の原点
+        x0 = self.X_ORG + self.COL_INTV * col
+        y0 = self.Y_ORG
         for y in range(7):
+            # ドットの原点x座標
+            y1 = y0 + y * self.BLOCK_INTV
             for x in range(5):
-                if LCD_font_styles[int(code)][i] == 1:
+                # if LCD_font_styles[int(code)][i] == 1:
+                if LCD_font_styles[code * 7 + y][x] == "1":
                     color = self.COLOR_ON
                 else:
                     color = self.COLOR_OFF
-                # 桁の原点
-                x0 = self.X_ORG + self.COL_INTV * col
-                y0 = self.Y_ORG
-                # ドットの原点座標
-                org1 = (x0 + x * self.BLOCK_INTV, y0 + y * self.BLOCK_INTV)
+                # ドットの原点x座標
+                x1 = x0 + x * self.BLOCK_INTV
                 # ドットを描く
-                pygame.draw.rect(self.screen, color, Rect(org1[0], org1[1], block_size, block_size))
-                i += 1
+                pygame.draw.rect(self.screen, color, Rect(x1, y1, block_size, block_size))
+
+
+if __name__ == "__main__":
+    WINDOW_WIDTH = 640
+    WINDOW_HEIGHT = 240
+
+    pygame.init()
+    screen1 = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption("LCD font")
+
+    lcd1 = LCD_font(screen1)
+    lcd1.init_col(BLOCK_SIZE=7, BLOCK_INTV=8, COLOR_ON=GREEN, COLOR_OFF=GRAY)
+    lcd1.init_row(X_ORG=8, Y_ORG=8, COL_INTV=6)
+
+    for n in range(12):
+        lcd1.update_col(col=n - 1, code=n)
+    pygame.display.flip()  # update
+
+    while True:
+        pass
