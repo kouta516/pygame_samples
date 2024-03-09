@@ -3,27 +3,26 @@
 from datetime import datetime
 from datetime import date
 import pygame
+from pygame.colordict import THECOLORS as pg_colors
 from lcd_font_pg import LCD_font as LCD_font_pg
 
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-HOT_PINK = (255, 105, 180)
-NAVY = (0, 0, 128)
-ORANGE = (255, 200, 0)
-LAVENDER = (230, 230, 250)
+# color names are defined in pygame.colordict.THECOLORS
+# https://www.pygame.org/docs/ref/color_list.html
 
-FPS = 15  # frames per second, 15 is enough and over 60 is not necessary
-WAIT = 0.1  # wait for the next key press in seconds
+FPS = 30  # frames per second, 15 is enough and over 60 is not necessary
+WAIT = 0.15  # wait for the next key press in seconds
 KEY_REPEAT_DELAY, KEY_REPEAT_INTERVAL = 500, 250  # for pygame.key.set_repeat()
 WIDTH, HEIGHT = 670, 480
 TITLE = "LCD font monthly calendar"
 # 文字色と背景色の設定
-COLOR = WHITE
-BACKGROUND = NAVY
+COLOR = pg_colors['firebrick4']
+BACKGROUND = pg_colors['lightblue2']
 # 年と月の変更、「今日」のためのキー設定
-CTRL_Y = {pygame.K_UP: 1, pygame.K_DOWN: -1}
-CTRL_M = {pygame.K_LEFT: -1, pygame.K_RIGHT: 1}
-CTRL_TODAY = pygame.K_t
+CTRL_KEYS = [[pygame.K_UP, "YEAR", 1],
+             [pygame.K_DOWN, "YEAR", -1],
+             [pygame.K_LEFT, "MONTH", -1],
+             [pygame.K_RIGHT, "MONTH", 1],
+             [pygame.K_t, "TODAY", '']]
 # 日曜始まり、月曜始まりの設定
 FIRST_DAY_OF_WEEK = 1  # 0:Sunday, 1:Monday
 
@@ -142,28 +141,32 @@ def main(display):
     # infinite loop top ----
     while running:
         # press ctrl-c or close the window to stop
-        if not running:
-            break
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key in CTRL_Y:
-                    y_change = CTRL_Y[event.key]
-                    update_flag = True
-                if event.key in CTRL_M:
-                    m_change = CTRL_M[event.key]
-                    update_flag = True
-                if event.key == CTRL_TODAY:
-                    # 今月のカレンダーに戻す
-                    the_year = dt_now.year
-                    the_month = dt_now.month
-                    update_flag = True
-            if event.type == pygame.KEYUP:
-                if event.key in {pygame.K_UP, pygame.K_DOWN}:
-                    y_change = 0
-                if event.key in {pygame.K_LEFT, pygame.K_RIGHT}:
-                    m_change = 0
+                for key in CTRL_KEYS:
+                    if event.key == key[0]:
+                        if key[1] == "YEAR":
+                            y_change = key[2]
+                            update_flag = True
+                        elif key[1] == "MONTH":
+                            m_change = key[2]
+                            update_flag = True
+                        elif key[1] == "TODAY":
+                            the_year = dt_now.year
+                            the_month = dt_now.month
+                            y_change = 0
+                            m_change = 0
+                            update_flag = True
+            elif event.type == pygame.KEYUP:
+                for key in CTRL_KEYS:
+                    if event.key == key[0]:
+                        if key[1] == "YEAR":
+                            y_change = 0
+                        elif key[1] == "MONTH":
+                            m_change = 0
+
         if update_flag and (skip_frames > FPS * WAIT):
             update_flag = False
             skip_frames = 0
