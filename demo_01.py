@@ -36,6 +36,9 @@ while running:
     x1 += 1
     if x1 > 4:
         x1 = 0
+        y1 += 1
+        if y1 > 6:
+            y1 = 0
 
     pygame.display.flip()  # update
     clock.tick(5)  # FPS, Frame Per Second
