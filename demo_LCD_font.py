@@ -36,6 +36,8 @@ def LCD_display(x, y):
     screen.blit(text1, rect1)
     # LCD sim
     lcd1.update_col(col=0, code=code)
+    lcd1.update_col(col=2, code=(code + 2) % 10)
+    lcd1.update_col(col=3, code=(code + 3) % 10)
 
 
 def infinite_loop():
