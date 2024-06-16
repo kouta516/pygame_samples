@@ -1,3 +1,6 @@
+1234
+
+
 # pygame_samples
 
  - demo_01.py: pygameの超簡単なデモ。
