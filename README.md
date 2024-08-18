@@ -1,15 +1,7 @@
-1234
+# API
+できること
+ブロックを変えたりしました。
 
+![Minecraft_ 1 16 5 - シングルプレイ 2024_08_18 9_25_25](https://github.com/user-attachments/assets/4c22fc43-e1d0-4528-8984-1b8f25047d0e)
+![Minecraft_ 1 16 5 - シングルプレイ 2024_08_18 9_20_59](https://github.com/user-attachments/assets/2ef7db3d-546b-46b3-bc1f-8946fa67a3fa)
 
-# pygame_samples
-
- - demo_01.py: pygameの超簡単なデモ。
- - demo_02.py: 7セグのシミュレーション、各セグメントを2ブロックで構成。Seven_segクラス使用。
- - demo_LCD_font_01.py: 5x7のLCDフォント制作用。LCD_fontクラス使用。
- - demo_LCD_font.py: 5x7のLCDフォント、完成版。
-
- - demo_freetype.py: pygame.freetypeでテキスト表示。（新しい方式）
- - demo_freetype.py: pygame.fontでテキスト表示。（古い方式）
- - demo_openmoji.py: オープンソースの絵文字、openmojiのデモ。キー操作のデモ。
- - seven_seg_pg.py: Seven_segクラス
- - lcd_font_pg.py: LCD_fontクラス
